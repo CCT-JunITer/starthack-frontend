@@ -20,7 +20,7 @@
         :key="index"
         :lat-lng="proposal.location"
         :icon="proposal.selected ? getMarkerIcon('green') : getMarkerIcon('red')"
-        draggable
+        :draggable="proposal.draggable"
       >
         <l-popup>
           <h2>Title</h2>
