@@ -20,6 +20,7 @@
         :key="index"
         :lat-lng="proposal.location"
         :icon="redMarkerIcon"
+        draggable
       >
         <l-popup>
           <h2>Title</h2>
