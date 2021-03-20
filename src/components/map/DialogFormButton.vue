@@ -23,7 +23,6 @@
               :rules="formDescriptionRules"
               label="Description of the proposal"
               required
-              filled
             ></v-textarea>
           </v-card-text>
           <v-divider></v-divider>
