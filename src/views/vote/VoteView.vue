@@ -96,7 +96,7 @@ import { Vue, Component } from 'vue-property-decorator';
 
 @Component({})
 export default class VoteView extends Vue {
-  toggleHeart(submission: any): void {
+  toggleHeart(submission: Proposal): void {
     submission.voted = !submission.voted;
     submission.votes += (submission.voted ? 1 : -1);
   }
@@ -116,7 +116,10 @@ export default class VoteView extends Vue {
     },
   ];
 
-  selectedSort: any = this.sort[0];
+  selectedSort: {
+    text: string;
+    filter: <T extends Proposal[]>(v: T) => T;
+  } = this.sort[0];
 
   get sorted(): Proposal[] {
     return this.selectedSort.filter(this.$store.state.proposals);
