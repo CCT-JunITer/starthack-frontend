@@ -1,11 +1,34 @@
 <template>
   <div class="map-container">
-    <dialog-form @add-proposal="createNewProposal"></dialog-form>
+    <v-snackbar
+      v-model="snackbarOpen"
+      light
+      multi-line
+      vertical
+    >
+      Add proposal at
+      <small v-if="selectedMarker.length">
+        {{ selectedMarker[0].toFixed(2) }}, {{ selectedMarker[1].toFixed(2) }}
+      </small>
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbarOpen = false"
+        >
+          Abort
+        </v-btn>
+        <dialog-form @add-proposal="createNewProposal"></dialog-form>
+      </template>
+    </v-snackbar>
     <l-map
       ref="map"
       :center="startCoordinates"
       :zoom="15"
       @ready="mapReady"
+      @click="addMarker"
     >
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-control class="map-container__current-location-icon" :position="'topleft'">
@@ -14,6 +37,8 @@
 
       <l-marker :lat-lng="currentUserLocation"></l-marker>
 
+      <l-marker v-if="snackbarOpen" :lat-lng="selectedMarker"></l-marker>
+
       <l-marker
         v-for="(proposal, index) in currentProposals"
         :key="index"
@@ -21,26 +46,13 @@
         :icon="proposal.selected ? getMarkerIcon('green') : getMarkerIcon('red')"
         :draggable="proposal.draggable"
       >
-        <l-popup>
-          <h2>Title</h2>
-          <p class="mt-1">{{ proposal.title }}</p>
-          <h2>Description</h2>
-          <p class="mt-1">{{ proposal.description }}</p>
-          <h2>Votes</h2>
-          <p class="mt-1">{{ proposal.votes }}</p>
-          <div class="popup__actions">
-            <v-btn
-              class="mb-2"
-              color="primary"
-              elevation="2"
-              @click="goToProposals"
-            >Go to proposals</v-btn>
-            <v-btn
-              v-if="proposal.selected"
-              elevation="2"
-              @click="deselectProposal(proposal)"
-            >Deselect proposal</v-btn>
-          </div>
+        <l-popup :options="{ className: 'custom-popup' }">
+          <proposal-card
+            :proposal="proposal"
+            width="360px"
+            elevation="0"
+            :hideLocationButton="true">
+         </proposal-card>
         </l-popup>
       </l-marker>
     </l-map>
@@ -54,6 +66,7 @@ import {
   LMap, LTileLayer, LMarker, LControl, LPopup,
 } from 'vue2-leaflet';
 import DialogForm from '@/components/map/DialogFormButton.vue';
+import ProposalCard from '@/components/ProposalCard.vue';
 import { Proposal } from '../interfaces/Proposal';
 
 interface MapElement {
@@ -68,6 +81,7 @@ interface MapElement {
     LControl,
     LPopup,
     DialogForm,
+    ProposalCard,
   },
 })
 export default class Map extends Vue {
@@ -89,7 +103,9 @@ export default class Map extends Vue {
 
   protected userLocation: number[] = [];
 
-  protected currentProposals: Proposal[] = [];
+  protected selectedMarker: number[] = [];
+
+  protected snackbarOpen = false;
 
   getMarkerIcon = (color: string): L.Icon => new L.Icon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
@@ -99,6 +115,13 @@ export default class Map extends Vue {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   });
+
+  addMarker(e: L.LocationEvent): void {
+    if (e.latlng) {
+      this.selectedMarker = [e.latlng.lat, e.latlng.lng];
+      this.snackbarOpen = true;
+    }
+  }
 
   mapReady(): void {
     this.mapObject = this.$refs.map.mapObject;
@@ -113,25 +136,27 @@ export default class Map extends Vue {
 
     this.mapObject.locate({ watch: true });
 
-    this.$store.state.proposals.forEach((proposal: Proposal) => {
-      this.currentProposals.push(proposal);
+    this.currentProposals.forEach((proposal: Proposal) => {
       if (proposal.selected) {
         this.mapObject.panTo({ lat: proposal.location[0], lng: proposal.location[1] });
       }
     });
   }
 
+  get currentProposals(): Proposal[] {
+    return this.$store.state.proposals;
+  }
+
   createNewProposal(proposal: Proposal): void {
     const newProposal: Proposal = {
       ...proposal,
-      location: this.currentUserLocation,
+      location: this.selectedMarker,
       status: 'created',
       /* eslint-disable-next-line */
       image: proposal.image || require('@/assets/schlagloch1.jpg'),
       votes: 0,
       type: 'Test',
     };
-    this.currentProposals.push(newProposal);
 
     this.$store.commit('addNewProposal', newProposal);
   }
@@ -148,13 +173,22 @@ export default class Map extends Vue {
     this.$router.push('/vote');
   }
 
-  deselectProposal = (proposal: Proposal): void => {
-    this.$store.commit('setSelectedProposal', { proposal, selected: false });
+  selectProposal = (proposal: Proposal): void => {
+    this.$store.commit('setSelectedProposal', { proposal, selected: !proposal.selected });
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.custom-popup {
+  .leaflet-popup-content-wrapper, .leaflet-popup-content {
+    margin: 0!important;
+    padding: 0!important;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
+
 .map-container {
   position: relative;
   width: 100%;

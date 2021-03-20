@@ -44,10 +44,9 @@ export default new Vuex.Store({
       state.proposals.push(proposal);
     },
     setSelectedProposal(state, { proposal, selected }: { proposal: Proposal, selected: boolean }) {
-      const filteredProposals = state.proposals.filter((p) => p.title === proposal.title);
-      if (filteredProposals.length >= 0) {
-        filteredProposals[0].selected = selected;
-      }
+      state.proposals = state.proposals.map(
+        (p) => (p.title === proposal.title ? { ...proposal, selected } : p),
+      );
     },
   },
   actions: {

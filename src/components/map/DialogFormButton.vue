@@ -1,9 +1,11 @@
 <template>
   <div class="dialog-form">
-    <v-btn class="dialog-form__add-btn" elevation="2" fab @click="isDialogOpen = true">
+
+    <v-btn text @click="isDialogOpen = true" color="primary">
       <v-icon>mdi-plus</v-icon>
+      add proposal
     </v-btn>
-    <v-dialog v-model="isDialogOpen" width="500" fullscreen transition="dialog-bottom-transition">
+    <v-dialog v-model="isDialogOpen" width="500" transition="dialog-bottom-transition">
       <template #activator="{ on }">
         <slot v-bind:on="on"></slot>
       </template>
@@ -40,7 +42,6 @@
             ></v-text-field>
             <v-textarea
               v-model="formDescription"
-              :rules="formDescriptionRules"
               label="Description of the proposal"
               required
             ></v-textarea>
@@ -65,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { Proposal } from '@/interfaces/Proposal';
 
 @Component
@@ -83,16 +84,11 @@ export default class DialogForm extends Vue {
 
   protected formDescription = '';
 
-  protected picture: string | null = null;
+  protected picture = '';
 
   protected formTitleRules = [
     (v: string): boolean | string => !!v || 'Title is required',
     (v: string): boolean | string => (v && v.length > 5) || 'Title must be more than 5 characters',
-  ];
-
-  protected formDescriptionRules = [
-    (v: string): boolean | string => !!v || 'Description is required',
-    (v: string): boolean | string => (v && v.length > 15) || 'Title must be more than 15 characters',
   ];
 
   submitProposal(): void {
@@ -105,6 +101,7 @@ export default class DialogForm extends Vue {
       } as Proposal);
       this.formTitle = '';
       this.formDescription = '';
+      this.picture = '';
     }
   }
 
