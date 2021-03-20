@@ -39,11 +39,11 @@
                 {{ submission.type }}
               </div>
               <v-spacer></v-spacer>
-              <v-btn text small rounded class="mx-1">
+              <v-btn text small rounded class="mx-1" @click="jumpToProposal(submission)">
                 <v-icon>
                   mdi-map-marker
                 </v-icon>
-                {{ submission.location }}
+                Jump to proposal
               </v-btn>
             <v-chip>
               <v-icon color="purple">
@@ -119,20 +119,13 @@ export default class VoteView extends Vue {
   selectedSort: any = this.sort[0];
 
   get sorted(): Proposal[] {
-    return this.selectedSort.filter(this.investments);
+    return this.selectedSort.filter(this.$store.state.proposals);
   }
 
-  investments: Proposal[] = [
-    {
-      type: 'Schlagloch',
-      title: 'Schlagloch sollte repariert werden',
-      description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-      votes: 200,
-      location: [1, 2, 3],
-      voted: true,
-      image: require('@/assets/schlagloch1.jpg'),
-    },
-  ];
+  jumpToProposal(submission: Proposal): void {
+    submission.selected = true;
+    this.$router.push('/map');
+  }
 }
 </script>
 

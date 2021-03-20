@@ -6,4 +6,6 @@ export interface Proposal {
   votes: number,
   voted?: boolean,
   image?: string,
+  draggable?: boolean;
+  selected?: boolean;
 }

@@ -19,7 +19,7 @@
         v-for="(proposal, index) in currentProposals"
         :key="index"
         :lat-lng="proposal.location"
-        :icon="redMarkerIcon"
+        :icon="proposal.selected ? getMarkerIcon('green') : getMarkerIcon('red')"
         draggable
       >
         <l-popup>
@@ -75,8 +75,8 @@ export default class Map extends Vue {
 
   protected currentProposals: Proposal[] = [];
 
-  protected redMarkerIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  getMarkerIcon = (color: string): L.Icon => new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -88,13 +88,20 @@ export default class Map extends Vue {
     this.mapObject = this.$refs.map.mapObject;
     this.mapObject.on('locationfound', (e: L.LocationEvent) => {
       if (this.currentUserLocation === this.startCoordinates) {
-        this.mapObject.locate({ setView: true });
+        // this.mapObject.locate({ setView: true });
       }
 
       this.userLocation = [e.latlng.lat, e.latlng.lng];
     });
 
     setInterval(() => this.mapObject.locate(), 2500);
+
+    this.$store.state.proposals.forEach((proposal: Proposal) => {
+      this.currentProposals.push(proposal);
+      if (proposal.selected) {
+        this.mapObject.panTo({ lat: proposal.location[0], lng: proposal.location[1] });
+      }
+    });
   }
 
   createNewProposal(proposal: Proposal): void {
