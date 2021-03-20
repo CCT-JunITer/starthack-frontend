@@ -79,11 +79,13 @@ export default class Map extends Vue {
 
   protected attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
-  protected startCoordinates = [47.42508857319259, -350.62349537853163];
+  protected startCoordinates = [47.4254995925386, 9.377487163874322];
 
   protected zoom = 15;
 
   protected mapObject!: L.Map;
+
+  protected wasUserLocationFound = false;
 
   protected userLocation: number[] = [];
 
@@ -101,14 +103,15 @@ export default class Map extends Vue {
   mapReady(): void {
     this.mapObject = this.$refs.map.mapObject;
     this.mapObject.on('locationfound', (e: L.LocationEvent) => {
-      if (this.currentUserLocation === this.startCoordinates) {
-        this.mapObject.locate({ setView: true });
+      if (!this.wasUserLocationFound) {
+        this.wasUserLocationFound = true;
+        this.mapObject.flyTo(e.latlng);
       }
 
       this.userLocation = [e.latlng.lat, e.latlng.lng];
     });
 
-    setInterval(() => this.mapObject.locate(), 2500);
+    this.mapObject.locate({ watch: true });
 
     this.$store.state.proposals.forEach((proposal: Proposal) => {
       this.currentProposals.push(proposal);

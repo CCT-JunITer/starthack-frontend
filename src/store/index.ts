@@ -10,7 +10,7 @@ export default new Vuex.Store({
       {
         title: 'This is a test title',
         description: 'This is a test description',
-        location: [47.42500299887883, -350.6236595328665],
+        location: [47.4254995925386, 9.377487163874322],
         type: 'Schlagloch',
         votes: 2,
         /* eslint-disable-next-line */
@@ -19,7 +19,7 @@ export default new Vuex.Store({
       {
         title: 'Second proposal',
         description: 'Second test description',
-        location: [47.42666881366304, -350.6105150113581],
+        location: [47.42702387138889, 9.387872677179987],
         type: 'Test',
         votes: 10,
         /* eslint-disable-next-line */
