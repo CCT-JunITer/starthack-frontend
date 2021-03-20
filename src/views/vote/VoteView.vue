@@ -45,13 +45,15 @@
                 </v-icon>
                 {{ submission.location }}
               </v-btn>
-
-              <v-icon color="teal">
-                mdi-check
+            <v-chip>
+              <v-icon color="purple">
+                mdi-timer-sand
               </v-icon>
+              in progress
+            </v-chip>
             </v-card-actions>
 
-            <v-card-text>{{ submission.text }}</v-card-text>
+            <v-card-text>{{ submission.description }}</v-card-text>
 
             <v-card-actions>
               <v-list-item class="grow">
@@ -89,8 +91,8 @@
 
 <script lang="ts">
 /* eslint-disable global-require, no-param-reassign, class-methods-use-this */
+import { Report } from '@/interfaces/Report';
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Submission } from '@/interfaces';
 
 @Component({})
 export default class VoteView extends Vue {
@@ -102,33 +104,32 @@ export default class VoteView extends Vue {
   sort = [
     {
       text: 'Votes aufsteigend',
-      filter: <T extends Array<Submission>>(v: T): T => v.sort((o1, o2) => o1.votes - o2.votes),
+      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o1.votes - o2.votes),
     },
     {
       text: 'Votes absteigend',
-      filter: <T extends Array<Submission>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
+      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
     },
     {
       text: 'Neuste zuerst',
-      filter: <T extends Array<Submission>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
+      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
     },
   ];
 
   selectedSort: any = this.sort[0];
 
-  get sorted(): Submission[] {
+  get sorted(): Report[] {
     return this.selectedSort.filter(this.investments);
   }
 
-  investments: Submission[] = [
+  investments: Report[] = [
     {
       type: 'Schlagloch',
       title: 'Schlagloch sollte repariert werden',
-      text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-      status: 'finished',
+      description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
       votes: 200,
+      location: [1, 2, 3],
       voted: true,
-      location: 'St. Gallen',
       image: require('@/assets/schlagloch1.jpg'),
     },
   ];

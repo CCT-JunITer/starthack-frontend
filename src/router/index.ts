@@ -29,10 +29,6 @@ const routes: Array<RouteConfig> = [
     name: 'vote',
     component: () => import('../views/vote/VoteView.vue'),
   },
-  {
-    path: '/vote/:id',
-    component: () => import('../views/vote/Vote.vue'),
-  },
 ];
 
 const router = new VueRouter({
