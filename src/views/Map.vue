@@ -125,8 +125,9 @@ export default class Map extends Vue {
     const newProposal: Proposal = {
       ...proposal,
       location: this.currentUserLocation,
+      status: 'created',
       /* eslint-disable-next-line */
-      image: require('@/assets/schlagloch1.jpg'),
+      image: proposal.image || require('@/assets/schlagloch1.jpg'),
       votes: 0,
       type: 'Test',
     };

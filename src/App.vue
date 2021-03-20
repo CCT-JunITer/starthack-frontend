@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="sidebar" app>
+    <v-navigation-drawer v-model="sidebar" app temporary>
       <v-list dense nav>
         <v-list-item
           color="red"
