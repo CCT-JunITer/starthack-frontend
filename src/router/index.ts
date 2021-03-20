@@ -24,6 +24,11 @@ const routes: Array<RouteConfig> = [
     name: 'Map',
     component: Map,
   },
+  {
+    path: '/vote',
+    name: 'vote',
+    component: () => import('../views/vote/VoteView.vue'),
+  },
 ];
 
 const router = new VueRouter({

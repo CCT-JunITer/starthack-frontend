@@ -1,6 +1,7 @@
 import Vue from 'vue';
+import '@/styles/overrides.scss';
 import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+// import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
