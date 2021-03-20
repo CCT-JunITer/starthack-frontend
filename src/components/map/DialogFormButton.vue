@@ -9,19 +9,19 @@
       </template>
 
       <v-card>
-        <v-form ref="problemForm" v-model="isFormValid" lazy-validation>
-          <v-card-title>Report a problem</v-card-title>
+        <v-form ref="proposalForm" v-model="isFormValid" lazy-validation>
+          <v-card-title>Make a proposal</v-card-title>
           <v-card-text>
             <v-text-field
               v-model="formTitle"
               :rules="formTitleRules"
-              label="Title of the problem"
+              label="Title of the proposal"
               required
             ></v-text-field>
             <v-textarea
               v-model="formDescription"
               :rules="formDescriptionRules"
-              label="Description of the problem"
+              label="Description of the proposal"
               required
               filled
             ></v-textarea>
@@ -32,8 +32,8 @@
               color="success"
               elevation="2"
               :disabled="!isFormValid"
-              @click="submitProblem"
-            >Report the problem</v-btn>
+              @click="submitProposal"
+            >Make the proposal</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -48,7 +48,7 @@ import { Report } from '@/interfaces/Report';
 @Component
 export default class DialogForm extends Vue {
   $refs!: {
-    problemForm: HTMLFormElement,
+    proposalForm: HTMLFormElement,
   };
 
   protected isDialogOpen = false;
@@ -69,8 +69,8 @@ export default class DialogForm extends Vue {
     (v: string): boolean | string => (v && v.length > 15) || 'Title must be more than 15 characters',
   ];
 
-  submitProblem(): void {
-    if (this.$refs.problemForm.validate()) {
+  submitProposal(): void {
+    if (this.$refs.proposalForm.validate()) {
       this.isDialogOpen = false;
       this.$emit('add-report', {
         title: this.formTitle,

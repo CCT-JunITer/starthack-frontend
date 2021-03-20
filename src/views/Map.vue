@@ -9,6 +9,10 @@
       @click="printCoordinates"
     >
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+      <l-control class="map-container__current-location-icon" :position="'topleft'">
+        <v-icon dense @click="goToCurrentLocation">mdi-crosshairs-gps</v-icon>
+      </l-control>
+
       <l-marker :lat-lng="currentUserLocation"></l-marker>
 
       <l-marker
@@ -24,7 +28,9 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import L, { LeafletMouseEvent } from 'leaflet';
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import {
+  LMap, LTileLayer, LMarker, LControl,
+} from 'vue2-leaflet';
 import DialogForm from '@/components/map/DialogFormButton.vue';
 import { Report } from '../interfaces/Report';
 
@@ -37,6 +43,7 @@ interface MapElement {
     LMap,
     LTileLayer,
     LMarker,
+    LControl,
     DialogForm,
   },
 })
@@ -55,7 +62,7 @@ export default class Map extends Vue {
 
   protected mapObject!: L.Map;
 
-  protected currentUserLocation: number[] = this.startCoordinates;
+  protected userLocation: number[] = [];
 
   protected currentReports: Report[] = [];
 
@@ -71,16 +78,27 @@ export default class Map extends Vue {
   mapReady(): void {
     this.mapObject = this.$refs.map.mapObject;
     this.mapObject.on('locationfound', (e: L.LocationEvent) => {
-      this.currentUserLocation = [e.latlng.lat, e.latlng.lng];
+      if (this.currentUserLocation === this.startCoordinates) {
+        this.mapObject.locate({ setView: true });
+      }
+
+      this.userLocation = [e.latlng.lat, e.latlng.lng];
     });
 
-    this.mapObject.locate({ setView: true });
     setInterval(() => this.mapObject.locate(), 2500);
   }
 
   createNewReport(report: Report): void {
     const newReport = { ...report, location: this.currentUserLocation };
     this.currentReports.push(newReport);
+  }
+
+  goToCurrentLocation(): void {
+    this.mapObject.panTo({ lat: this.currentUserLocation[0], lng: this.currentUserLocation[1] });
+  }
+
+  get currentUserLocation(): number[] {
+    return this.userLocation.length === 2 ? this.userLocation : this.startCoordinates;
   }
 
   printCoordinates = (event: LeafletMouseEvent): void => {
@@ -94,6 +112,23 @@ export default class Map extends Vue {
   position: relative;
   width: 100%;
   height: 100%;
+
+  .map-container__current-location-icon {
+    background-color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 100ms ease-in-out;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
 
   .vue2leaflet-map {
     position: absolute;
