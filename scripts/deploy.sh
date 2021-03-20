@@ -3,6 +3,8 @@
 # abort on errors
 set -e
 
+PUSH_URL=$(git remote get-url origin --push)
+
 # build
 yarn build
 
@@ -13,6 +15,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f https://github.com/CCT-JunITer/starthack-frontend.git master:gh-pages
+git push -f "$PUSH_URL" master:gh-pages
 
 cd -
