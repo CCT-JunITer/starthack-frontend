@@ -43,7 +43,7 @@
                 <v-icon>
                   mdi-map-marker
                 </v-icon>
-                Jump to proposal
+                Go to location
               </v-btn>
             <v-chip>
               <v-icon color="purple">

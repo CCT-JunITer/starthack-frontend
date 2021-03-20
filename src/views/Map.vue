@@ -27,6 +27,9 @@
           <p class="mt-1">{{ proposal.title }}</p>
           <h2>Description</h2>
           <p class="mt-1">{{ proposal.description }}</p>
+          <h2>Votes</h2>
+          <p class="mt-1">{{ proposal.votes }}</p>
+          <v-btn elevation="2" @click="goToProposals">Go to proposals</v-btn>
         </l-popup>
       </l-marker>
     </l-map>
@@ -124,6 +127,10 @@ export default class Map extends Vue {
 
   get currentUserLocation(): number[] {
     return this.userLocation.length === 2 ? this.userLocation : this.startCoordinates;
+  }
+
+  goToProposals(): void {
+    this.$router.push('/vote');
   }
 
   printCoordinates = (event: LeafletMouseEvent): void => {
