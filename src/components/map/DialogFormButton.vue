@@ -72,6 +72,7 @@ import { Proposal } from '@/interfaces/Proposal';
 export default class DialogForm extends Vue {
   $refs!: {
     proposalForm: HTMLFormElement,
+    fileInput: HTMLInputElement,
   };
 
   protected isDialogOpen = false;
@@ -108,7 +109,7 @@ export default class DialogForm extends Vue {
   }
 
   public trigger(): void {
-    (this.$refs.fileInput as HTMLElement).click();
+    this.$refs.fileInput.click();
   }
 
   onFileInput(file: Event): void {
