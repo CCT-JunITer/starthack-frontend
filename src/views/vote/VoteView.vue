@@ -45,11 +45,26 @@
                 </v-icon>
                 Go to location
               </v-btn>
-            <v-chip>
-              <v-icon color="purple">
-                mdi-timer-sand
+            <v-chip
+              small
+              text-color="white"
+              :color="{
+                  'none': 'red',
+                  'in progress': 'cyan',
+                  'finished': 'green',
+                  'created': 'grey',
+                }[submission.status || 'none']">
+              <v-icon small left>
+                {{
+                  {
+                    'none': 'mdi-none',
+                    'in progress': 'mdi-timer-sand',
+                    'finished': 'mdi-flag-checkered',
+                    'created': 'mdi-creation',
+                  }[submission.status || 'none']
+                }}
               </v-icon>
-              in progress
+              {{ submission.status }}
             </v-chip>
             </v-card-actions>
 

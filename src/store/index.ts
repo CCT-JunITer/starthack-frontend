@@ -15,6 +15,7 @@ export default new Vuex.Store({
         votes: 2,
         /* eslint-disable-next-line */
         image: require('@/assets/schlagloch1.jpg'),
+        status: 'in progress',
       },
       {
         title: 'Second proposal',
@@ -24,6 +25,17 @@ export default new Vuex.Store({
         votes: 10,
         /* eslint-disable-next-line */
         image: require('@/assets/schlagloch1.jpg'),
+        status: 'created',
+      },
+      {
+        title: 'Third proposal',
+        description: 'Third test description',
+        location: [47.42702387138889, 9.387872677179987],
+        type: 'Test',
+        votes: 11,
+        /* eslint-disable-next-line */
+        image: require('@/assets/schlagloch1.jpg'),
+        status: 'finished',
       },
     ] as Proposal[],
   },
