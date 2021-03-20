@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-form">
-    <v-btn class="dialog-form__add-btn" elevation="2" fab @click="isDialogOpen = true;">
+    <v-btn class="dialog-form__add-btn" elevation="2" fab @click="openDialogForm">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="isDialogOpen" width="500">
@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { Report } from '@/interfaces/Report';
+import { Proposal } from '@/interfaces/Proposal';
 
 @Component
 export default class DialogForm extends Vue {
@@ -69,13 +69,18 @@ export default class DialogForm extends Vue {
     (v: string): boolean | string => (v && v.length > 15) || 'Title must be more than 15 characters',
   ];
 
+  openDialogForm(): void {
+    this.isDialogOpen = true;
+    this.$nextTick(() => this.$refs.proposalForm.validate());
+  }
+
   submitProposal(): void {
     if (this.$refs.proposalForm.validate()) {
       this.isDialogOpen = false;
-      this.$emit('add-report', {
+      this.$emit('add-proposal', {
         title: this.formTitle,
         description: this.formDescription,
-      } as Report);
+      } as Proposal);
       this.formTitle = '';
       this.formDescription = '';
     }

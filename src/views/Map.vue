@@ -1,6 +1,6 @@
 <template>
   <div class="map-container">
-    <dialog-form @add-report="createNewReport"></dialog-form>
+    <dialog-form @add-proposal="createNewProposal"></dialog-form>
     <l-map
       ref="map"
       :center="startCoordinates"
@@ -16,11 +16,18 @@
       <l-marker :lat-lng="currentUserLocation"></l-marker>
 
       <l-marker
-        v-for="(report, index) in currentReports"
+        v-for="(proposal, index) in currentProposals"
         :key="index"
-        :lat-lng="report.location"
+        :lat-lng="proposal.location"
         :icon="redMarkerIcon"
-      ></l-marker>
+      >
+        <l-popup>
+          <h2>Title</h2>
+          <p class="mt-1">{{ proposal.title }}</p>
+          <h2>Description</h2>
+          <p class="mt-1">{{ proposal.description }}</p>
+        </l-popup>
+      </l-marker>
     </l-map>
   </div>
 </template>
@@ -29,10 +36,10 @@
 import { Vue, Component } from 'vue-property-decorator';
 import L, { LeafletMouseEvent } from 'leaflet';
 import {
-  LMap, LTileLayer, LMarker, LControl,
+  LMap, LTileLayer, LMarker, LControl, LPopup,
 } from 'vue2-leaflet';
 import DialogForm from '@/components/map/DialogFormButton.vue';
-import { Report } from '../interfaces/Report';
+import { Proposal } from '../interfaces/Proposal';
 
 interface MapElement {
   mapObject: L.Map;
@@ -44,6 +51,7 @@ interface MapElement {
     LTileLayer,
     LMarker,
     LControl,
+    LPopup,
     DialogForm,
   },
 })
@@ -64,7 +72,7 @@ export default class Map extends Vue {
 
   protected userLocation: number[] = [];
 
-  protected currentReports: Report[] = [];
+  protected currentProposals: Proposal[] = [];
 
   protected redMarkerIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -88,9 +96,9 @@ export default class Map extends Vue {
     setInterval(() => this.mapObject.locate(), 2500);
   }
 
-  createNewReport(report: Report): void {
-    const newReport = { ...report, location: this.currentUserLocation };
-    this.currentReports.push(newReport);
+  createNewProposal(proposal: Proposal): void {
+    const newProposal = { ...proposal, location: this.currentUserLocation };
+    this.currentProposals.push(newProposal);
   }
 
   goToCurrentLocation(): void {
