@@ -91,8 +91,8 @@
 
 <script lang="ts">
 /* eslint-disable global-require, no-param-reassign, class-methods-use-this */
-import { Report } from '@/interfaces/Report';
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Proposal } from '@/interfaces/Proposal';
+import { Vue, Component } from 'vue-property-decorator';
 
 @Component({})
 export default class VoteView extends Vue {
@@ -104,25 +104,25 @@ export default class VoteView extends Vue {
   sort = [
     {
       text: 'Votes aufsteigend',
-      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o1.votes - o2.votes),
+      filter: <T extends Array<Proposal>>(v: T): T => v.sort((o1, o2) => o1.votes - o2.votes),
     },
     {
       text: 'Votes absteigend',
-      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
+      filter: <T extends Array<Proposal>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
     },
     {
       text: 'Neuste zuerst',
-      filter: <T extends Array<Report>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
+      filter: <T extends Array<Proposal>>(v: T): T => v.sort((o1, o2) => o2.votes - o1.votes),
     },
   ];
 
   selectedSort: any = this.sort[0];
 
-  get sorted(): Report[] {
+  get sorted(): Proposal[] {
     return this.selectedSort.filter(this.investments);
   }
 
-  investments: Report[] = [
+  investments: Proposal[] = [
     {
       type: 'Schlagloch',
       title: 'Schlagloch sollte repariert werden',
