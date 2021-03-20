@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-form">
-    <v-btn class="dialog-form__add-btn" elevation="2" fab @click="openDialogForm">
+    <v-btn class="dialog-form__add-btn" elevation="2" fab @click="isDialogOpen = true">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="isDialogOpen" width="500">
@@ -9,7 +9,7 @@
       </template>
 
       <v-card>
-        <v-form ref="proposalForm" v-model="isFormValid" lazy-validation>
+        <v-form ref="proposalForm" v-model="isFormValid">
           <v-card-title>Make a proposal</v-card-title>
           <v-card-text>
             <v-text-field
@@ -67,11 +67,6 @@ export default class DialogForm extends Vue {
     (v: string): boolean | string => !!v || 'Description is required',
     (v: string): boolean | string => (v && v.length > 15) || 'Title must be more than 15 characters',
   ];
-
-  openDialogForm(): void {
-    this.isDialogOpen = true;
-    this.$nextTick(() => this.$refs.proposalForm.validate());
-  }
 
   submitProposal(): void {
     if (this.$refs.proposalForm.validate()) {

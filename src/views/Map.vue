@@ -6,7 +6,6 @@
       :center="startCoordinates"
       :zoom="15"
       @ready="mapReady"
-      @click="printCoordinates"
     >
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-control class="map-container__current-location-icon" :position="'topleft'">
@@ -29,12 +28,19 @@
           <p class="mt-1">{{ proposal.description }}</p>
           <h2>Votes</h2>
           <p class="mt-1">{{ proposal.votes }}</p>
-          <v-btn color="primary" elevation="2" @click="goToProposals">Go to proposals</v-btn>
-          <v-btn
-            v-if="proposal.selected"
-            elevation="2"
-            @click="deselectProposal(proposal)"
-          >Deselect proposal</v-btn>
+          <div class="popup__actions">
+            <v-btn
+              class="mb-2"
+              color="primary"
+              elevation="2"
+              @click="goToProposals"
+            >Go to proposals</v-btn>
+            <v-btn
+              v-if="proposal.selected"
+              elevation="2"
+              @click="deselectProposal(proposal)"
+            >Deselect proposal</v-btn>
+          </div>
         </l-popup>
       </l-marker>
     </l-map>
@@ -43,7 +49,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import L, { LeafletMouseEvent } from 'leaflet';
+import L from 'leaflet';
 import {
   LMap, LTileLayer, LMarker, LControl, LPopup,
 } from 'vue2-leaflet';
@@ -96,7 +102,7 @@ export default class Map extends Vue {
     this.mapObject = this.$refs.map.mapObject;
     this.mapObject.on('locationfound', (e: L.LocationEvent) => {
       if (this.currentUserLocation === this.startCoordinates) {
-        // this.mapObject.locate({ setView: true });
+        this.mapObject.locate({ setView: true });
       }
 
       this.userLocation = [e.latlng.lat, e.latlng.lng];
@@ -141,10 +147,6 @@ export default class Map extends Vue {
   deselectProposal = (proposal: Proposal): void => {
     this.$store.commit('setSelectedProposal', { proposal, selected: false });
   }
-
-  printCoordinates = (event: LeafletMouseEvent): void => {
-    console.log(event.latlng);
-  }
 }
 </script>
 
@@ -153,6 +155,13 @@ export default class Map extends Vue {
   position: relative;
   width: 100%;
   height: 100%;
+
+  .popup__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
   .map-container__current-location-icon {
     background-color: #fff;
