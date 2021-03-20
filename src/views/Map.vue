@@ -105,8 +105,17 @@ export default class Map extends Vue {
   }
 
   createNewProposal(proposal: Proposal): void {
-    const newProposal = { ...proposal, location: this.currentUserLocation };
+    const newProposal: Proposal = {
+      ...proposal,
+      location: this.currentUserLocation,
+      /* eslint-disable-next-line */
+      image: require('@/assets/schlagloch1.jpg'),
+      votes: 0,
+      type: 'Test',
+    };
     this.currentProposals.push(newProposal);
+
+    this.$store.commit('addNewProposal', newProposal);
   }
 
   goToCurrentLocation(): void {

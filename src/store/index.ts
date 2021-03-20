@@ -28,6 +28,9 @@ export default new Vuex.Store({
     ] as Proposal[],
   },
   mutations: {
+    addNewProposal(state, proposal: Proposal) {
+      state.proposals.push(proposal);
+    },
   },
   actions: {
   },
