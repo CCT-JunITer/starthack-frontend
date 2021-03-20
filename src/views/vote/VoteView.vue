@@ -126,7 +126,7 @@ export default class VoteView extends Vue {
   }
 
   jumpToProposal(submission: Proposal): void {
-    submission.selected = true;
+    this.$store.commit('setSelectedProposal', { proposal: submission, selected: true });
     this.$router.push('/map');
   }
 }

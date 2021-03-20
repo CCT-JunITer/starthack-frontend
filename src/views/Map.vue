@@ -29,7 +29,12 @@
           <p class="mt-1">{{ proposal.description }}</p>
           <h2>Votes</h2>
           <p class="mt-1">{{ proposal.votes }}</p>
-          <v-btn elevation="2" @click="goToProposals">Go to proposals</v-btn>
+          <v-btn color="primary" elevation="2" @click="goToProposals">Go to proposals</v-btn>
+          <v-btn
+            v-if="proposal.selected"
+            elevation="2"
+            @click="deselectProposal(proposal)"
+          >Deselect proposal</v-btn>
         </l-popup>
       </l-marker>
     </l-map>
@@ -131,6 +136,10 @@ export default class Map extends Vue {
 
   goToProposals(): void {
     this.$router.push('/vote');
+  }
+
+  deselectProposal = (proposal: Proposal): void => {
+    this.$store.commit('setSelectedProposal', { proposal, selected: false });
   }
 
   printCoordinates = (event: LeafletMouseEvent): void => {
