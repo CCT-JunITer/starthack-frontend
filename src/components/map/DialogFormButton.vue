@@ -25,14 +25,7 @@
           <v-toolbar-title>Make a proposal</v-toolbar-title>
         </v-toolbar>
         <v-form ref="proposalForm" v-model="isFormValid">
-          <div class="upload-photo" v-ripple @click="trigger">
-            <p>Upload photo</p>
-            <v-icon>mdi-camera</v-icon>
-            <v-img :src="picture">
-
-            </v-img>
-          </div>
-          <input hidden @change="onFileInput" type="file" ref="fileInput"/>
+          <upload-photo v-model="picture"></upload-photo>
           <v-card-text>
             <v-text-field
               v-model="formTitle"
@@ -68,12 +61,14 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { Proposal } from '@/interfaces/Proposal';
+import UploadPhoto from '../UploadPhoto.vue';
 
-@Component
+@Component({
+  components: { UploadPhoto },
+})
 export default class DialogForm extends Vue {
   $refs!: {
     proposalForm: HTMLFormElement,
-    fileInput: HTMLInputElement,
   };
 
   protected isDialogOpen = false;
@@ -104,36 +99,10 @@ export default class DialogForm extends Vue {
       this.picture = '';
     }
   }
-
-  public trigger(): void {
-    this.$refs.fileInput.click();
-  }
-
-  onFileInput(file: Event): void {
-    const { files } = file.target as HTMLInputElement;
-    if (!files || files.length !== 1) {
-      return;
-    }
-    const fileReader = new FileReader();
-    fileReader.onloadend = (e) => {
-      this.picture = e.target?.result as string;
-    };
-    fileReader.readAsDataURL(files[0]);
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-
-.upload-photo {
-  border: 3px dashed grey;
-  margin: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 0;
-}
 
 .dialog-form {
   z-index: 1000;

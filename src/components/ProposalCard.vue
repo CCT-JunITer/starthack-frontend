@@ -7,13 +7,19 @@
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       :src="proposal.image"
     >
-      <v-card-title>{{ proposal.title }}</v-card-title>
+      <v-card-title v-if="!edit">{{ proposal.title }}</v-card-title>
+      <v-text-field dark v-else v-model="proposal.title"></v-text-field>
     </v-img>
 
+    <upload-photo v-model="proposal.image" v-if="edit" :noPreview="true">
+    </upload-photo>
+
     <v-card-actions>
-      <div class="overline subtitle ml-2">
+      <div v-if="!edit" class="overline subtitle ml-2">
         {{ proposal.type }}
       </div>
+      <v-text-field v-else v-model="proposal.type" class="subtitle"></v-text-field>
+
       <v-spacer></v-spacer>
       <v-btn
         v-if="!hideLocationButton"
@@ -46,11 +52,17 @@
           }[proposal.status || 'none']
         }}
       </v-icon>
-      {{ proposal.status }}
+      <v-text-field dense v-model="proposal.status" v-if="edit" shaped></v-text-field>
+      <span v-else>{{ proposal.status }}</span>
     </v-chip>
     </v-card-actions>
 
-    <v-card-text>{{ proposal.description }}</v-card-text>
+    <v-card-text v-if="!edit">
+      <div v-for="line in proposal.description.split('\n')" :key="line">
+        {{ line }}
+      </div>
+    </v-card-text>
+    <v-textarea v-else v-model="proposal.description"></v-textarea>
 
     <v-card-actions>
       <v-list-item class="grow">
@@ -75,7 +87,13 @@
               mdi-heart
             </v-icon>
           </v-btn>
-          <span class="subheading mr-2">{{ proposal.votes }}</span>
+          <span class="subheading mr-2" v-if="!edit">{{ proposal.votes }}</span>
+          <v-text-field
+            :value="'' + proposal.votes"
+            @input="proposal.votes = +$event"
+            v-else
+            type="number">
+          </v-text-field>
         </v-row>
       </v-list-item>
     </v-card-actions>
@@ -86,14 +104,21 @@
 /* eslint-disable no-param-reassign */
 import { Proposal } from '@/interfaces/Proposal';
 import { Vue, Component, Prop } from 'vue-property-decorator';
+import UploadPhoto from './UploadPhoto.vue';
 
-@Component({})
+@Component({
+  components: { UploadPhoto },
+})
 export default class ProposalCard extends Vue {
   @Prop()
   public proposal!: Proposal;
 
   @Prop({ required: false })
   public hideLocationButton!: boolean;
+
+  get edit(): boolean {
+    return this.$store.getters.isDeveloper;
+  }
 
   jumpToProposal(proposal: Proposal): void {
     this.$store.commit('setSelectedProposal', { proposal, selected: true });

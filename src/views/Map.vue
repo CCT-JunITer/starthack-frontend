@@ -153,7 +153,6 @@ export default class Map extends Vue {
       location: this.selectedMarker,
       status: 'created',
       /* eslint-disable-next-line */
-      image: proposal.image || require('@/assets/no.jpg'),
       votes: 0,
       type: 'Test',
     };

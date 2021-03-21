@@ -44,6 +44,7 @@
         src="@/assets/wappen.svg"
         transition="scale-transition"
         width="27"
+        @click="$store.commit('toggleDeveloper')"
       />
 
     </v-app-bar>

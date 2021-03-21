@@ -5,7 +5,13 @@ import { Proposal } from '@/interfaces/Proposal';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  getters: {
+    isDeveloper(state) {
+      return state.developer;
+    },
+  },
   state: {
+    developer: false,
     proposals: [
       {
         title: 'pothole',
@@ -37,6 +43,9 @@ export default new Vuex.Store({
       state.proposals = state.proposals.map(
         (p) => (p.title === proposal.title ? { ...proposal, selected } : p),
       );
+    },
+    toggleDeveloper(state) {
+      state.developer = !state.developer;
     },
   },
   actions: {
